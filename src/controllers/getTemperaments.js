@@ -25,8 +25,21 @@ const getTemperaments = async (req, res)=>{
         
         const objClearTemperaments = clearTemperaments.map(name_temperament=>({name_temperament}))
 
-        await Temperaments.update(objClearTemperaments, {where: {name_temperament: null}})
+        // await Temperaments.update(objClearTemperaments, {where: {name_temperament: null}})
 
+        // await Temperaments.bulkCreate(objClearTemperaments)
+
+        for (const temperament of objClearTemperaments) {
+            const verificar = await Temperaments.findOne({ where: { name_temperament: temperament.name_temperament } });
+          
+            if (!verificar) {
+              await Temperaments.create(temperament);
+            }
+          }
+          
+        
+        // console.log(objClearTemperaments)
+        
         res.status(200).json(clearTemperaments)
 
     } catch (error) {
